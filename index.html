@@ -19,117 +19,152 @@
 <body>
     
   <div class="container">
-    <h1>Movie Search</h1>
+    <h1>Click the buttons below to create 10 gifs</h1>
 
-    <!-- Movies will get dumped here -->
+    <!-- Buttons will get dumped here -->
     <div id="buttons-view"></div>
 
-    <form id="movie-form">
-      <label for="movie-input">Add a Movie, Yo!</label>
-      <input type="text" id="movie-input"><br>
-
-      <!-- Button triggers new movie to be added -->
-      <input id="add-movie" type="submit" value="Add a Movie, Yo!">
+    <form id="gif-form">
+      <input type="text" id="gif-input"><br>
+      <!-- Button triggers new gif to be added -->
+      <input id="add-gifTopic" type="submit" value="Make New Topic">
     </form>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script type="text/javascript">
-      // Initial array of movies
-      var movies = ["The Matrix", "The Notebook", "Mr. Nobody", "The Lion King"];
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+  var key = xxx;
 
-      // Function for dumping the JSON content for each button into the div
-      function displayGIF() {
+  //initialize variable for array. make it empty.
 
-        var movie = $(this).attr("data-name");
-        var queryURL = "https://www.omdbapi.com/?t=" + movie + "&apikey=trilogy";
+  var gifArray = [];
 
-        $.ajax({
-          url: queryURL,
-          method: "GET"
-        }).then(function(response) {
-          $("#movies-view").text(JSON.stringify(response));
-        });
-      }
+  //1. creating the buttons we can select
+  function renderButtons() {
+    $("#buttons-view").empty();
+    for (var i = 0; i < movies.length; i++) {
+      var a = $("<button>")
+        a.addClass("gifTopic-btn");
+        a.attr("data-name", gifArray[i]);
+        a.text(gifArray[i]);
+        $("#buttons-view").append(a);
+        //apply something that doesn't allow duplicate buttons
+    }
+  }
 
-    //   ----------------------
-
-
-    $("#cat-button").on("click", function() {
-
-// Storing our giphy API URL for a random cat image
-var queryURL = 'https://api.giphy.com/v1/gifs/search?q=' + str.replace(/ /g, '+') + '&api_key=' + key + '&limit=10';
-
-// Perfoming an AJAX GET request to our queryURL
-$.ajax({
-  url: queryURL,
-  method: "GET"
-})
-
-  // After the data from the AJAX request comes back
-  .then(function(response) {
-
-    // Saving the image_original_url property
-    var imageUrl = response.data.image_original_url;
-
-    // Creating and storing an image tag
-    var catImage = $("<img>");
-
-    // Setting the catImage src attribute to imageUrl
-    catImage.attr("src", imageUrl);
-    catImage.attr("alt", "cat image");
-
-    // Prepending the catImage to the images div
-    $("#images").prepend(catImage);
-  });
-});
-//-----------------------------------------
-
-      // Function for displaying movie data
-      function renderButtons() {
-
-        // Deleting the buttons prior to adding new movies
-        // (this is necessary otherwise you will have repeat buttons)
-        $("#buttons-view").empty();
-
-        // Looping through the array of movies
-        for (var i = 0; i < movies.length; i++) {
-
-          // Then dynamically generating buttons for each movie in the array
-          // This code $("<button>") is all jQuery needs to create the beginning and end tag. (<button></button>)
-          var a = $("<button>");
-          // Adding a class of movie to our button
-          a.addClass("movie");
-          // Adding a data-attribute
-          a.attr("data-name", movies[i]);
-          // Providing the initial button text
-          a.text(movies[i]);
-          // Adding the button to the buttons-view div
-          $("#buttons-view").append(a);
-        }
-      }
-
-      // This function handles events where one button is clicked
-      $("#add-movie").on("click", function(event) {
+  //2. using the text bar to add a topic to the array
+  $("#add-gifTopic").on("click", function(event) {
         event.preventDefault();
-
-        // This line grabs the input from the textbox
-        var movie = $("#movie-input").val().trim();
-
-        // Adding the movie from the textbox to our array
-        movies.push(movie);
-        console.log(movies);
-
+        if (input === '') {
+          alert('Enter a topic');
+        }
+        else {
+        var gifTopic = $("#gifTopic-input").val().trim();
+        gifArray.push(gifTopic);
         // Calling renderButtons which handles the processing of our movie array
         renderButtons();
-      });
+        }
+  });
 
-      // Function for displaying the movie info
-      // Using $(document).on instead of $(".movie").on to add event listeners to dynamically generated elements
-      $(document).on("click", ".movie", displayGIF);
+//section needed? how does it work with the larger scheme
+//-------------------------
+      // Adding a click event listener to all elements with a class of "movie-btn"
+      $(document).on("click", ".gifTopic-btn", displayGif);
 
-      // Calling the renderButtons function to display the initial buttons
+      // Calling the renderButtons function to display the intial buttons
       renderButtons();
-    </script>
-  </div>
+
+  //----------------------
+  
+
+  //calling the api to create 10 gifs and rating
+  //need to update this to stills then create on click for images.
+
+  $("button").on("click", function() {
+  var button = $(this).attr("data-button");
+  var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+    button + "&api_key=BkaUZZWcFij6J7AoQj3WtPb1R2p9O6V9&limit=10";
+
+  $.ajax({
+    url: queryURL,
+    method: "GET"
+  }).then(function(response) {
+    console.log(response);
+    var results = response.data
+
+    for (var i = 0; i < results.length; i++) {
+      // Make a div with jQuery and store it in a variable
+      var gifDiv = $("<div>");
+      // Make a paragraph tag with jQuery and store it in a variable named p.
+      var p = $("<p>");
+      // Set the inner text of the paragraph to the rating of the image in results[i].
+      p.text("rating: " + results[i].rating);
+      // Make an image tag with jQuery and store it in a variable
+      var gifImage = $("<img>");
+      // Set the image's src to results[i]'s fixed_height.url.
+      buttonImage.attr("src", results[i].images.fixed_height.url);
+      // Append the p variable to the animalDiv variable.
+      gifDiv.append(p);
+      // Append the animalImage variable to the gifDiv variable.
+      gifDiv.append(buttonImage);
+      // Prepend the gifDiv variable to the element with an id of gifs-appear-here.
+      $("#gifs-appear-here").prepend(buttonDiv);
+      }
+  });
+});
+
+//in class example of script needed to pause javascript
+
+  $(".gif").on("click", function() {
+    // The attr jQuery method allows us to get or set the value of any attribute on our HTML element
+    var state = $(this).attr("data-state");
+    // If the clicked image's state is still, update its src attribute to what its data-animate value is.
+    // Then, set the image's data-state to animate
+    // Else set src to the data-still value
+    if (state === "still") {
+      $(this).attr("src", $(this).attr("data-animate"));
+      $(this).attr("data-state", "animate");
+    } else {
+      $(this).attr("src", $(this).attr("data-still"));
+      $(this).attr("data-state", "still");
+    }
+  });
+
+  
+  //create function to rendergif
+      //initialize an image for the thumbnail to sit.
+      //initialize the rating for the thumbnail
+      //initialize the rating for the thumbnail
+      //append images, title, and rating to the div or column to host
+      //listen for clicks of thumbnail using id created in thumbnail
+      //loop conditions for counter if clicked or unclicked.
+
+  //create function for searching
+      //initialize input value
+      //if empty, produce alert
+      //else get the tag and clear the input
+
+
+  //create a jquery to say when a tag button is clicked, use third funct
+  
+  // Initial array of movies
+
+ function callArray () {
+    topics = ['aussie','whistler','texas','snowboard','locomotive','festival','hiking','photography'];
+
+    topics.forEach(element => {
+      element.toLowerCase();
+      renderTopic(element);
+    }
+    $('#tag-button').click(searchButton);
+  }
+
+  //create an on window load, tart function for last function to initialize
+
+  window.onload = () => {
+    callArray();
+  };
+ 
+</script>
+</div>
 </body>
 </html>
